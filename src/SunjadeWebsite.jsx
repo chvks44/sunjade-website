@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, createContext, useContext } from "react";
+import { Analytics } from "@vercel/analytics/react";
 
 // ── CONSTANTS ──
 const C = {
@@ -215,7 +216,7 @@ const T = {
       tag: "申请流程",
       title1: "申请",
       titleHL: "流程",
-      sub: "从首次咨询到抵达中国大学——我们为您处理一切。",
+      sub: "从首次咨询到抵达中国大学——我���为您处理一切。",
       steps: [
         { num: "01", title: "咨询与评估", time: "1–2周", desc: "一对一评估您的学术背景（WAEC/NECO/学位）、语言水平、职业兴趣和预算，并提供初步大学推荐。" },
         { num: "02", title: "材料准备", time: "2–4周", desc: "准备并公证所有所需材料：成绩单、护照、语言证书、个人陈述、推荐信、体检报告和无犯罪记录证明。" },
@@ -1063,6 +1064,7 @@ export default function SunjadeWebsite() {
         <CampusLife />
         <Contact />
         <Footer />
+        <Analytics />
       </div>
     </LangContext.Provider>
   );

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, createContext, useContext } from "react";
+import { Analytics } from "@vercel/analytics/react";
 
 // ── CONSTANTS ──
 const C = {
@@ -134,7 +135,7 @@ const T = {
         { icon: "📝", level: "语言课程", duration: "6个月–1年", desc: "从零开始学习中文或提高HSK水平。是学位课程的理想预备课程。", req: "无需中文基础", age: "无限制" },
         { icon: "📘", level: "预科课程", duration: "6–12个月", desc: "语言和学术预备相结合的桥梁课程。毕业后通常可直接进入学位课程。", req: "高中毕业证书", age: "无限制" },
         { icon: "📕", level: "本科（学士学位）", duration: "4年", desc: "涵盖工程、医学、商科、计算机科学等领域的英语或中文授课全日制学位课程。", req: "WAEC/NECO ≥70%", age: "25岁以下" },
-        { icon: "📗", level: "硕士学位", duration: "2–3年", desc: "高级课程和研究选择。英语授课课程广泛提供。", req: "学士学位 ≥75%", age: "35岁以下" },
+        { icon: "📗", level: "硕士学位", duration: "2–3年", desc: "高级课程和研究选择��英语授课课程广泛提供。", req: "学士学位 ≥75%", age: "35岁以下" },
         { icon: "📙", level: "博士学位", duration: "3–4年", desc: "全额资助的研究项目，含月度津贴。适合学术研究人员。", req: "硕士学位 + 研究计划", age: "40岁以下" },
       ],
     },
@@ -215,13 +216,13 @@ const T = {
       tag: "申请流程",
       title1: "申请",
       titleHL: "流程",
-      sub: "从首次咨询到抵达中国大学——我们为您处理一切。",
+      sub: "从首次咨询到抵达中国大学——我���为您处理一切。",
       steps: [
         { num: "01", title: "咨询与评估", time: "1–2周", desc: "一对一评估您的学术背景（WAEC/NECO/学位）、语言水平、职业兴趣和预算，并提供初步大学推荐。" },
         { num: "02", title: "材料准备", time: "2–4周", desc: "准备并公证所有所需材料：成绩单、护照、语言证书、个人陈述、推荐信、体检报告和无犯罪记录证明。" },
         { num: "03", title: "提交申请", time: "10月–6月", desc: "我们负责在线申请、与大学联络并跟踪您的申请状态。CSC使馆渠道申请最早12月开放。" },
         { num: "04", title: "录取与签证", time: "收到录取通知后", desc: "收到录取通知书和JW201/JW202表格。我们指导您在阿布贾中国大使馆或拉各斯领事馆申请X1/X2学生签证。" },
-        { num: "05", title: "行前准备与抵达", time: "6–8月", desc: "参加我们的行前说明会，涵盖文化、安全、财务和行李准备。我们安排机场接机并协助注册、住宿和居留许可。" },
+        { num: "05", title: "行前准备与抵达", time: "6–8月", desc: "参加我们的行前说明会，涵盖文化、安全、财务和行李准备。我们安排机场接机���协助注册、住宿和居留许可。" },
       ],
     },
   },
@@ -1063,6 +1064,7 @@ export default function SunjadeWebsite() {
         <CampusLife />
         <Contact />
         <Footer />
+        <Analytics />
       </div>
     </LangContext.Provider>
   );

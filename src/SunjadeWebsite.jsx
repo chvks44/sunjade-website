@@ -420,40 +420,116 @@ function LangToggle({ lang, setLang }) {
 // ── NAVBAR ──
 function Navbar({ activeSection, lang, setLang }) {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const n = T.nav[lang];
   const labels = [n.home, n.whyChina, n.programs, n.scholarships, n.universities, n.process, n.contact];
 
   useEffect(() => {
-    const h = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", h);
-    return () => window.removeEventListener("scroll", h);
+    const handleScroll = () => setScrolled(window.scrollY > 40);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleResize);
+    return () => { window.removeEventListener("scroll", handleScroll); window.removeEventListener("resize", handleResize); };
   }, []);
 
+  useEffect(() => { if (!isMobile) setMobileOpen(false); }, [isMobile]);
+  useEffect(() => { document.body.style.overflow = mobileOpen ? "hidden" : ""; return () => { document.body.style.overflow = ""; }; }, [mobileOpen]);
+
+  const scrollTo = (id) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); setMobileOpen(false); };
+
+  // Hamburger icon (3 lines that animate to X)
+  const HamburgerIcon = () => (
+    <div onClick={() => setMobileOpen(!mobileOpen)} style={{ cursor: "pointer", width: 28, height: 28, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: 0, position: "relative", zIndex: 1100 }}>
+      <span style={{ display: "block", width: 22, height: 2.5, background: C.dark, borderRadius: 2, transition: "all 0.3s ease", transform: mobileOpen ? "rotate(45deg) translateY(3.5px)" : "none", transformOrigin: "center" }} />
+      <span style={{ display: "block", width: 22, height: 2.5, background: C.dark, borderRadius: 2, transition: "all 0.3s ease", opacity: mobileOpen ? 0 : 1, margin: "4px 0" }} />
+      <span style={{ display: "block", width: 22, height: 2.5, background: C.dark, borderRadius: 2, transition: "all 0.3s ease", transform: mobileOpen ? "rotate(-45deg) translateY(-3.5px)" : "none", transformOrigin: "center" }} />
+    </div>
+  );
+
   return (
-    <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
-      background: scrolled ? "rgba(255,255,255,0.97)" : "rgba(255,255,255,0.92)",
-      backdropFilter: "blur(12px)", borderBottom: scrolled ? "1px solid #E5E7EB" : "1px solid transparent", transition: "all 0.3s" }}>
-      <div style={{ maxWidth: 1140, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }} onClick={() => document.getElementById("home")?.scrollIntoView({ behavior: "smooth" })}>
-          <div style={{ width: 36, height: 36, borderRadius: "50%", background: C.crimson, display: "flex", alignItems: "center", justifyContent: "center", color: C.white, fontWeight: 700, fontSize: 16, fontFamily: "Georgia" }}>S</div>
-          <span style={{ fontSize: 18, fontWeight: 700, color: C.dark, fontFamily: "Georgia" }}>Sunjade</span>
+    <>
+      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
+        background: scrolled ? "rgba(255,255,255,0.97)" : "rgba(255,255,255,0.92)",
+        backdropFilter: "blur(12px)", borderBottom: scrolled ? "1px solid #E5E7EB" : "1px solid transparent", transition: "all 0.3s" }}>
+        <div style={{ maxWidth: 1140, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }} onClick={() => scrollTo("home")}>
+            <div style={{ width: 36, height: 36, borderRadius: "50%", background: C.crimson, display: "flex", alignItems: "center", justifyContent: "center", color: C.white, fontWeight: 700, fontSize: 16, fontFamily: "Georgia" }}>S</div>
+            <span style={{ fontSize: 18, fontWeight: 700, color: C.dark, fontFamily: "Georgia" }}>Sunjade</span>
+          </div>
+
+          {/* Desktop nav */}
+          {!isMobile && (
+            <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+              {NAV_IDS.map((id, i) => (
+                <a key={id} onClick={(e) => { e.preventDefault(); scrollTo(id); }} href={`#${id}`}
+                  style={{ padding: "6px 12px", fontSize: 13.5, fontWeight: 500, color: activeSection === id ? C.crimson : C.grey,
+                    textDecoration: "none", borderRadius: 6, transition: "all 0.2s", fontFamily: "system-ui",
+                    background: activeSection === id ? `${C.crimson}0D` : "transparent", whiteSpace: "nowrap" }}>
+                  {labels[i]}
+                </a>
+              ))}
+              <LangToggle lang={lang} setLang={setLang} />
+              <Btn primary onClick={() => scrollTo("contact")} style={{ marginLeft: 8, padding: "8px 20px", fontSize: 13, borderRadius: 20, whiteSpace: "nowrap" }}>
+                {n.apply}
+              </Btn>
+            </div>
+          )}
+
+          {/* Mobile hamburger */}
+          {isMobile && (
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <LangToggle lang={lang} setLang={setLang} />
+              <HamburgerIcon />
+            </div>
+          )}
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          {NAV_IDS.map((id, i) => (
-            <a key={id} onClick={(e) => { e.preventDefault(); document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); }} href={`#${id}`}
-              style={{ padding: "6px 12px", fontSize: 13.5, fontWeight: 500, color: activeSection === id ? C.crimson : C.grey,
-                textDecoration: "none", borderRadius: 6, transition: "all 0.2s", fontFamily: "system-ui",
-                background: activeSection === id ? `${C.crimson}0D` : "transparent", whiteSpace: "nowrap" }}>
-              {labels[i]}
-            </a>
-          ))}
-          <LangToggle lang={lang} setLang={setLang} />
-          <Btn primary onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })} style={{ marginLeft: 8, padding: "8px 20px", fontSize: 13, borderRadius: 20, whiteSpace: "nowrap" }}>
-            {n.apply}
-          </Btn>
-        </div>
-      </div>
-    </nav>
+      </nav>
+
+      {/* Mobile slide-out menu */}
+      {isMobile && (
+        <>
+          {/* Backdrop overlay */}
+          <div onClick={() => setMobileOpen(false)} style={{
+            position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 998,
+            opacity: mobileOpen ? 1 : 0, pointerEvents: mobileOpen ? "auto" : "none",
+            transition: "opacity 0.3s ease",
+          }} />
+
+          {/* Menu panel */}
+          <div style={{
+            position: "fixed", top: 0, right: 0, bottom: 0, width: "min(320px, 85vw)", zIndex: 999,
+            background: C.white, boxShadow: mobileOpen ? "-4px 0 24px rgba(0,0,0,0.12)" : "none",
+            transform: mobileOpen ? "translateX(0)" : "translateX(100%)",
+            transition: "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+            display: "flex", flexDirection: "column", paddingTop: 80,
+          }}>
+            <div style={{ flex: 1, overflowY: "auto", padding: "0 24px" }}>
+              {NAV_IDS.map((id, i) => (
+                <a key={id} onClick={(e) => { e.preventDefault(); scrollTo(id); }} href={`#${id}`}
+                  style={{
+                    display: "block", padding: "16px 0", fontSize: 17, fontWeight: 600, fontFamily: "system-ui",
+                    color: activeSection === id ? C.crimson : C.dark, textDecoration: "none",
+                    borderBottom: "1px solid #F3F4F6", transition: "color 0.2s",
+                  }}>
+                  {labels[i]}
+                </a>
+              ))}
+            </div>
+            <div style={{ padding: "20px 24px 32px" }}>
+              <button onClick={() => scrollTo("contact")} style={{
+                width: "100%", padding: "16px", background: C.crimson, color: C.white,
+                border: "none", borderRadius: 10, fontSize: 16, fontWeight: 700,
+                cursor: "pointer", fontFamily: "system-ui",
+              }}>
+                {n.apply} →
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+    </>
   );
 }
 
@@ -900,9 +976,83 @@ export default function SunjadeWebsite() {
     return () => observer.disconnect();
   }, []);
 
+  // Inject global responsive CSS
+  useEffect(() => {
+    const styleId = "sunjade-responsive";
+    if (document.getElementById(styleId)) return;
+    const style = document.createElement("style");
+    style.id = styleId;
+    style.textContent = `
+      /* ── TABLET: 768px – 1024px ── */
+      @media (max-width: 1024px) {
+        h1 { font-size: 40px !important; }
+        h2 { font-size: 30px !important; }
+      }
+
+      /* ── MOBILE: under 768px ── */
+      @media (max-width: 768px) {
+        section > div { padding-left: 16px !important; padding-right: 16px !important; }
+        h1 { font-size: 32px !important; }
+        h2 { font-size: 26px !important; }
+
+        /* Hero section */
+        #home > div { padding-top: 40px !important; padding-bottom: 40px !important; gap: 32px !important; }
+        #home > div > div:first-child { flex-basis: 100% !important; }
+        #home > div > div:last-child { flex-basis: 100% !important; min-height: 240px !important; }
+        #home > div > div:last-child > div:first-child { height: 240px !important; }
+
+        /* Section padding */
+        section { padding-top: 48px !important; padding-bottom: 48px !important; }
+
+        /* Grid layouts — stack on mobile */
+        [style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+
+        /* Program cards — stack content */
+        [style*="flex: \\"0 0 240px\\""] { flex-basis: 100% !important; }
+
+        /* Contact section — stack form and info */
+        #contact > div > div { gap: 32px !important; }
+        #contact > div > div > div { flex-basis: 100% !important; }
+
+        /* Stats row */
+        #home [style*="gap: 36px"] { gap: 20px !important; }
+        #home [style*="gap: 36px"] > div > div:first-child { font-size: 22px !important; }
+
+        /* Cost comparison bar */
+        [style*="justify-content: space-around"] { padding: 24px 20px !important; gap: 16px !important; }
+        [style*="justify-content: space-around"] > div > div:first-child { font-size: 18px !important; }
+
+        /* Process timeline */
+        [style*="left: 27"] { left: 19px !important; }
+        [style*="minWidth: 56"] { min-width: 40px !important; height: 40px !important; font-size: 13px !important; }
+
+        /* Campus life — stack columns */
+        #campus-life > div > div { flex-basis: 100% !important; }
+      }
+
+      /* ── SMALL MOBILE: under 480px ── */
+      @media (max-width: 480px) {
+        h1 { font-size: 28px !important; }
+        h2 { font-size: 22px !important; }
+        #home > div > div:last-child > div:first-child { height: 200px !important; }
+      }
+
+      /* Smooth scroll behavior */
+      html { scroll-behavior: smooth; }
+
+      /* Better tap targets on mobile */
+      @media (max-width: 768px) {
+        a, button { min-height: 44px; }
+        input, select, textarea { font-size: 16px !important; }
+      }
+    `;
+    document.head.appendChild(style);
+    return () => { const el = document.getElementById(styleId); if (el) el.remove(); };
+  }, []);
+
   return (
     <LangContext.Provider value={lang}>
-      <div style={{ fontFamily: "'Georgia', serif", background: C.white, color: C.dark }}>
+      <div style={{ fontFamily: "'Georgia', serif", background: C.white, color: C.dark, overflowX: "hidden" }}>
         <Navbar activeSection={activeSection} lang={lang} setLang={setLang} />
         <Hero />
         <WhyChina />

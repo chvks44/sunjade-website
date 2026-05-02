@@ -293,7 +293,7 @@ const T = {
       privacy: "Your information is safe with us. We'll only use it to contact you about studying in China.",
       thankYou: "Thank You",
       thankYouMsg: "We've received your details and will reach out to you shortly via WhatsApp or email with personalized program recommendations.",
-      errorGeneral: "Something went wrong. Please try again or email us directly at info@sunjade.com",
+      errorGeneral: "Something went wrong. Please try again or email us directly at hello@sunjade.agency",
       errorConnection: "Connection error. Please check your internet and try again.",
       errName: "Please enter your full name",
       errEmail: "Please enter your email",
@@ -330,7 +330,7 @@ const T = {
       privacy: "您的信息是安全的。我们只会用它来联系您关于留学中国的事宜。",
       thankYou: "谢谢您",
       thankYouMsg: "我们已收到您的信息，将尽快通过WhatsApp或电子邮件与您联系，提供个性化的课程推荐。",
-      errorGeneral: "出了点问题，请重试或直接发送邮件至 info@sunjade.com",
+      errorGeneral: "出了点问题，请重试或直接发送邮件至 hello@sunjade.agency",
       errorConnection: "连接错误，请检查网络后重试。",
       errName: "请输入您的姓名",
       errEmail: "请输入您的电子邮箱",
@@ -841,7 +841,7 @@ function Contact() {
             <h2 style={{ fontSize: 42, fontWeight: 700, color: C.goldLight, lineHeight: 1.2, margin: "0 0 24px", fontFamily: "Georgia" }}>{t.title2}</h2>
             <p style={{ fontSize: 16, color: "rgba(255,255,255,0.6)", lineHeight: 1.7, maxWidth: 440, margin: "0 0 36px" }}>{t.desc}</p>
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              {[{ icon: "📧", label: t.email, value: "info@sunjade.com" }, { icon: "📸", label: t.instagram, value: "@studyinchinabysunjade" }].map((c, i) => (
+              {[{ icon: "📧", label: t.email, value: "hello@sunjade.agency" }, { icon: "📸", label: t.instagram, value: "@studyinchinabysunjade" }].map((c, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: 14 }}>
                   <div style={{ width: 40, height: 40, borderRadius: 10, background: "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>{c.icon}</div>
                   <div>
